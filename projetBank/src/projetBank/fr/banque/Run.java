@@ -1,5 +1,7 @@
 package projetBank.fr.banque;
 
+import java.util.Scanner;
+
 public class Run {
 
 	public static void main(String[] args) {
@@ -52,7 +54,11 @@ public class Run {
 		System.out.println("Temps en ms : " + (end-start));
 
 		System.out.println("Press Any Key To Continue...");
-        new java.util.Scanner(System.in).nextLine();
+        Scanner sc = new Scanner(System.in);
+        sc.nextLine();
+        sc.close();
+
+
 
 
 	}

@@ -185,7 +185,7 @@ public class Client {
 	@Override
 	public int hashCode() {
 		String b = this.getClass().getName()+"_"+this.toString();
-		return super.hashCode();
+		return b.hashCode();
 	}
 
 

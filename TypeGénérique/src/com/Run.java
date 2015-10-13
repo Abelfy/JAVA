@@ -13,6 +13,7 @@ public class Run {
 		avion.charger(1,m2);
 
 		Marchandise m3 = avion.decharger(1);
+		m3 = null;
 
 	}
 
