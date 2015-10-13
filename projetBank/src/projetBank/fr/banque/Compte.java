@@ -44,7 +44,7 @@ public class Compte {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getClass().getName());
 		builder.append(" [");
-		builder.append("Numero compte : ");
+		builder.append("Numero compte = ");
 		builder.append(this.getNumero());
 		if (this.type != null) {
 			builder.append(", type=");
