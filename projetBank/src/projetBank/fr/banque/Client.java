@@ -1,13 +1,14 @@
 package projetBank.fr.banque;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 public class Client {
 
 	private String prenom;
 	private String nom;
 	private int age;
-	private int numero;
+	private long numero;
 	private Compte[] comptes;
 	public static final int NB_MAX_COMPTE = 5;
 
@@ -16,23 +17,20 @@ public class Client {
 	 *
 	 */
 	public Client() {
-		super();
+		this("");
 	}
 	/**
 	 * @param prenom
 	 */
 	public Client(String prenom) {
-		super();
-		this.prenom = prenom;
+		this(prenom,"");
 	}
 	/**
 	 * @param prenom
 	 * @param nom
 	 */
 	public Client(String prenom, String nom) {
-		super();
-		this.prenom = prenom;
-		this.nom = nom;
+		this(prenom,nom,0);
 	}
 	/**
 	 * @param prenom
@@ -40,40 +38,11 @@ public class Client {
 	 * @param age
 	 */
 	public Client(String prenom, String nom, int age) {
-		super();
-		this.prenom = prenom;
-		this.nom = nom;
-		this.age = age;
+		this.setPrenom(prenom);
+		this.setNom(nom);
+		this.setAge(age);
+		this.numero = UUID.randomUUID().getMostSignificantBits();
 	}
-	/**
-	 * @param prenom
-	 * @param nom
-	 * @param age
-	 * @param numeroDeType
-	 */
-	public Client(String prenom, String nom, int age, int numero) {
-		super();
-		this.prenom = prenom;
-		this.nom = nom;
-		this.age = age;
-		this.numero = numero;
-	}
-	/**
-	 * @param prenom
-	 * @param nom
-	 * @param age
-	 * @param numeroDeType
-	 * @param comptes
-	 */
-	public Client(String prenom, String nom, int age, int numero, Compte[] comptes) {
-		super();
-		this.prenom = prenom;
-		this.nom = nom;
-		this.age = age;
-		this.numero = numero;
-		this.comptes = comptes;
-	}
-
 
 
 	public String getPrenom() {
@@ -85,7 +54,7 @@ public class Client {
 	public int getAge() {
 		return this.age;
 	}
-	public int getNumero() {
+	public long getNumero() {
 		return this.numero;
 	}
 	public void setPrenom(String prenom) {
@@ -97,9 +66,7 @@ public class Client {
 	public void setAge(int age) {
 		this.age = age;
 	}
-	public void setNumero(int numero) {
-		this.numero = numero;
-	}
+
 	public void setComptes(Compte[] comptes) {
 		this.comptes = comptes;
 	}
@@ -137,15 +104,15 @@ public class Client {
 	public String toString(){
 		StringBuffer buff = new StringBuffer();
 		buff.append(this.getClass().getName());
+		buff.append(" [Numero = ");
+		buff.append(this.getNumero());
 		buff.append(", prenom : ");
 		buff.append(this.getPrenom());
 		buff.append(", nom : ");
 		buff.append(this.getNom());
 		buff.append(", age : ");
 		buff.append(this.getAge());
-		buff.append(", numero : ");
-		buff.append(this.getNumero());
-		buff.append('\n');
+		buff.append(']');
 		if (this.comptes != null)
 		{
 			for (Compte compte : this.comptes) {
@@ -157,7 +124,6 @@ public class Client {
 	}
 
 
-	//#code ?
 	@Override
 	public boolean equals(Object obj) {
 		if(obj == null)

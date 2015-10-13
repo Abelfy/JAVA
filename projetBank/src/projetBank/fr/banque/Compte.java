@@ -1,42 +1,33 @@
 package projetBank.fr.banque;
 
+import java.util.UUID;
+
 public class Compte {
 
+	private long numero;
 	private TypeCompte type;
 	private double solde;
 
-	/**
-	 *
-	 */
 	public Compte() {
 		this(TypeCompte.COURRANT);
 	}
-	/**
-	 * @param type
-	 */
 	public Compte(TypeCompte type) {
-		super();
-		this.type = type;
+		this(type,100);
 	}
-	/**
-	 * @param type
-	 * @param solde
-	 */
 	public Compte(TypeCompte type, double solde) {
-		super();
-		this.type = type;
-		this.solde = solde;
+		this.setType(type);
+		this.setSolde(solde);
+		this.numero = UUID.randomUUID().getMostSignificantBits();
 	}
-
 	public void ajouter(double unMontant){
-
 		this.setSolde(this.getSolde()+unMontant);
 	}
 	public void retirer(double unMontant){
-
 		this.setSolde(this.getSolde()-unMontant);
 	}
-
+	public long getNumero() {
+		return this.numero;
+	}
 	public TypeCompte getType() {
 		return this.type;
 	}
@@ -54,12 +45,13 @@ public class Compte {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getClass().getName());
 		builder.append(" [");
+		builder.append("Numero compte : ");
+		builder.append(this.getNumero());
 		if (this.type != null) {
-			builder.append("type=");
+			builder.append(", type=");
 			builder.append(this.type);
-			builder.append(", ");
 		}
-		builder.append("solde=");
+		builder.append(", solde=");
 		builder.append(this.solde);
 		builder.append("]");
 		return builder.toString();
