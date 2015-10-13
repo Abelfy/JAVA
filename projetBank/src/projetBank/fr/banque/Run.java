@@ -38,6 +38,7 @@ public class Run {
 
 
 		Compte[] comptes =client1.getComptes();
+		//Test commit
 		comptes[0].ajouter(1000);
 		comptes[0].retirer(10);
 		comptes[1].ajouter(-800);
