@@ -22,9 +22,7 @@ public class Point3D extends Point2D
 	@Override
 	public void afficher() {
 		// TODO Auto-generated method stub
-		System.out.print("Coordonnée Z :" + this.getZ() + " ");
-		super.afficher();
-
+		System.out.print(this.toString());
 	}
 
 
@@ -33,8 +31,7 @@ public class Point3D extends Point2D
 		// TODO Auto-generated method stub
 		StringBuilder builder = new StringBuilder();
 		builder.append(super.toString());
-		builder.append(this.getClass().getName());
-		builder.append("Coodonnée Z :");
+		builder.append(" Coodonnée Z :");
 		builder.append(this.getZ());
 		return builder.toString();
 	}

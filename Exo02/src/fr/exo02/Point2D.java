@@ -66,9 +66,9 @@ class Point2D implements Cloneable {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.getClass().getName());
-		builder.append("Coordonnée X : ");
+		builder.append(" Coordonnée X : ");
 		builder.append(this.getX());
-		builder.append("Coordonnée Y : ");
+		builder.append(" Coordonnée Y : ");
 		builder.append(this.getY());
 		return builder.toString();
 	}
