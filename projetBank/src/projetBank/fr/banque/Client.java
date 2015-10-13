@@ -1,7 +1,6 @@
 package projetBank.fr.banque;
 
 import java.util.Arrays;
-import java.util.UUID;
 
 public class Client {
 
@@ -16,32 +15,20 @@ public class Client {
 	/**
 	 *
 	 */
-	public Client() {
-		this("");
+	public Client(long num){
+		this(num,"","",0);
 	}
-	/**
-	 * @param prenom
-	 */
-	public Client(String prenom) {
-		this(prenom,"");
+	public Client(long num, String nom){
+		this(num,nom,"",0);
 	}
-	/**
-	 * @param prenom
-	 * @param nom
-	 */
-	public Client(String prenom, String nom) {
-		this(prenom,nom,0);
+	public Client(long num, String nom, String prenom) {
+		this(num,nom,prenom,0);
 	}
-	/**
-	 * @param prenom
-	 * @param nom
-	 * @param age
-	 */
-	public Client(String prenom, String nom, int age) {
-		this.setPrenom(prenom);
+	public Client(long num,String nom, String prenom, int age) {
 		this.setNom(nom);
+		this.setPrenom(prenom);
 		this.setAge(age);
-		this.numero = UUID.randomUUID().getMostSignificantBits();
+		this.numero = num;
 	}
 
 
@@ -104,7 +91,7 @@ public class Client {
 	public String toString(){
 		StringBuffer buff = new StringBuffer();
 		buff.append(this.getClass().getName());
-		buff.append(" [Numero = ");
+		buff.append(" [Numero client  = ");
 		buff.append(this.getNumero());
 		buff.append(", prenom : ");
 		buff.append(this.getPrenom());

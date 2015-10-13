@@ -4,6 +4,17 @@ public class CompteRemunere extends Compte {
 
 	private double taux;
 
+	public CompteRemunere(long num){
+		super(num);
+	}
+	public CompteRemunere(long num, TypeCompte type) {
+		super(num);
+		this.setTaux(this.taux);
+	}
+	public CompteRemunere(long num, TypeCompte type, double taux) {
+		super(num, type);
+		this.setTaux(taux);
+	}
 
 	public double calculerInterets(){
 		return (this.getTaux()*this.getSolde());
@@ -12,6 +23,8 @@ public class CompteRemunere extends Compte {
 	{
 		this.ajouter(this.calculerInterets());
 	}
+
+
 
 	@Override
 	public String toString() {

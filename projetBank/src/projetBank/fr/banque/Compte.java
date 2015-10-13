@@ -1,24 +1,23 @@
 package projetBank.fr.banque;
 
-import java.util.UUID;
-
 public class Compte {
 
 	private long numero;
 	private TypeCompte type;
 	private double solde;
 
-	public Compte() {
-		this(TypeCompte.COURRANT);
+	public Compte(long num) {
+		this(num,TypeCompte.COURRANT,100);
 	}
-	public Compte(TypeCompte type) {
-		this(type,100);
+	public Compte(long num, TypeCompte type) {
+		this(num,type,100);
 	}
-	public Compte(TypeCompte type, double solde) {
+	public Compte(long num,TypeCompte type, double solde) {
 		this.setType(type);
 		this.setSolde(solde);
-		this.numero = UUID.randomUUID().getMostSignificantBits();
+		this.numero = num;
 	}
+
 	public void ajouter(double unMontant){
 		this.setSolde(this.getSolde()+unMontant);
 	}
