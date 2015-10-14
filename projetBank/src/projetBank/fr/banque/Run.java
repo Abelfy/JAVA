@@ -8,6 +8,8 @@ public class Run {
 
 		Factory<Client> fcc = new Factory<>(Client.class);
 		Factory<Compte> fcmpt = new Factory<>(Compte.class);
+		Factory<CompteRemunere> fCmptRmnr = new Factory<>(CompteRemunere.class);
+		Factory<CompteASeuil> fCompteAS = new Factory<>(CompteASeuil.class);
 
 		Client c = fcc.create();
 
@@ -25,6 +27,24 @@ public class Run {
 
 		System.out.println(cmpt.toString());
 		System.out.println(c0.toString());
+
+		objects=new Object[3];
+		objects[0]=TypeCompte.COURRANT;
+		objects[1]=2500.0;
+		objects[2]=2.0;
+
+		CompteRemunere CmptRmnr = fCmptRmnr.create(objects);
+
+		System.out.println(CmptRmnr.toString());
+
+		objects=new Object[3];
+		objects[0]=TypeCompte.COURRANT;
+		objects[1]=2500.0;
+		objects[2]=100.0;
+
+		CompteASeuil CmptAS = fCompteAS.create(objects);
+
+		System.out.println(CmptAS.toString());
 
 		/*FactoryClient fC = FactoryClient.getInstance();
 		FactoryCompte fCmpt = FactoryCompte.getInstance();

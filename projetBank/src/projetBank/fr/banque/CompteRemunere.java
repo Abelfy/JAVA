@@ -4,16 +4,16 @@ public class CompteRemunere extends Compte {
 
 	private double taux;
 
-	public CompteRemunere(long num){
-		super(num);
-	}
-	public CompteRemunere(long num, TypeCompte type) {
-		super(num);
-		this.setTaux(this.taux);
+	public CompteRemunere(long num,TypeCompte type){
+		super(num,type);
 	}
 	public CompteRemunere(long num, TypeCompte type, double taux) {
 		super(num, type);
 		this.setTaux(taux);
+	}
+	public CompteRemunere(long num, TypeCompte type,double solde, double taux) {
+		super(num,type, solde);
+		this.setTaux(taux) ;
 	}
 
 	public double calculerInterets(){
@@ -40,8 +40,14 @@ public class CompteRemunere extends Compte {
 		return this.taux;
 	}
 	public void setTaux(double taux) {
-		if((taux < 1) && (taux > 0)) {
+		if((taux < 1) && (taux > 0))
+		{
 			this.taux = taux;
+		}
+		else
+		{
+			this.taux = 0 ;
+			System.err.println("Taux doit etre compris entre 0 et 1");
 		}
 	}
 }
