@@ -12,7 +12,7 @@ public final class Factory<T> {
 	@SuppressWarnings("unchecked")
 	public T create(Object... objects)
 	{
-		if(objects == null){
+		if(objects.length == 0){
 			if(this.type == Client.class)
 			{
 				return (T)new Client(this.num++);

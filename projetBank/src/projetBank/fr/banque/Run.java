@@ -3,20 +3,28 @@ package projetBank.fr.banque;
 public class Run {
 
 	public static void main(String[] args) {
-		long start = System.currentTimeMillis();
+		//long start = System.currentTimeMillis();
 
 
 		Factory<Client> fcc = new Factory<>(Client.class);
 		Factory<Compte> fcmpt = new Factory<>(Compte.class);
-		Client c0 = fcc.create();
-		Object[] objects=new Object[3];
-		objects[0]="Belfy";
-		objects[1]="Adrien";
-		objects[2]=25;
+
+		Client c = fcc.create();
+
+		Object[] objects=new Object[2];
+		objects[0]=TypeCompte.COURRANT;
+		objects[1]=(double)25;
 
 		Compte cmpt = fcmpt.create(objects);
 
+		objects=new Object[3];
+		objects[0]="Belfy";
+		objects[1]="Adrien";
+		objects[2]=25;
+		Client c0 = fcc.create(objects);
+
 		System.out.println(cmpt.toString());
+		System.out.println(c0.toString());
 
 		/*FactoryClient fC = FactoryClient.getInstance();
 		FactoryCompte fCmpt = FactoryCompte.getInstance();
