@@ -134,10 +134,7 @@ import java.util.Arrays;
 		}
 		if(obj.getClass() == Client.class){
 			Client cTmp = (Client)obj;
-			String moi = this.toString();
-			String lui = cTmp.toString();
-			return moi.equals(lui);
-
+			return cTmp.getNumero() == this.getNumero();
 			//return (this.getNom() == cTmp.getNom()) || (this.getNom().equals(cTmp.getNom()) &&
 			//		(this.getPrenom() == cTmp.getPrenom())) || ((this.getPrenom().equals(cTmp.getPrenom()) &&
 			//		(this.getAge() == cTmp.getAge()) &&

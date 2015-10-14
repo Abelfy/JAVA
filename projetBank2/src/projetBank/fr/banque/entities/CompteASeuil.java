@@ -1,6 +1,6 @@
 package projetBank.fr.banque.entities;
 
-	class CompteASeuil extends Compte implements ICompteASeuil {
+class CompteASeuil extends Compte implements ICompteASeuil {
 
 	private double seuil;
 
@@ -55,6 +55,7 @@ package projetBank.fr.banque.entities;
 		}
 		else
 		{
+			//throw new BanqueException("Dépassement du seuil");
 			System.err.println("Limite de retrait :" + this.seuil);
 		}
 	}

@@ -71,10 +71,8 @@ package projetBank.fr.banque.entities;
 		}
 		if(obj instanceof Compte){
 			Compte cTmp = (Compte)obj;
-			String moi = this.toString();
-			String lui = cTmp.toString();
-			return moi.equals(lui);
 
+			return cTmp.getNumero() == this.getNumero();
 			//return (this.getNom() == cTmp.getNom()) || (this.getNom().equals(cTmp.getNom()) &&
 			//		(this.getPrenom() == cTmp.getPrenom())) || ((this.getPrenom().equals(cTmp.getPrenom()) &&
 			//		(this.getAge() == cTmp.getAge()) &&
@@ -83,6 +81,12 @@ package projetBank.fr.banque.entities;
 		}
 
 		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		String b = this.getClass().getName()+"_"+this.toString();
+		return b.hashCode();
 	}
 
 
