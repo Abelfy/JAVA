@@ -1,6 +1,6 @@
-package projetBank.fr.entities;
+package projetBank.fr.banque.entities;
 
-public class CompteASeuil extends Compte implements ICompteASeuil {
+	class CompteASeuil extends Compte implements ICompteASeuil {
 
 	private double seuil;
 
@@ -32,7 +32,10 @@ public class CompteASeuil extends Compte implements ICompteASeuil {
 	}
 	@Override
 	public void setSeuil(double seuil) {
+		if(seuil > 0)
+		{
 		this.seuil = seuil;
+		}
 	}
 	@Override
 	public String toString() {

@@ -1,6 +1,6 @@
-package projetBank.fr.entities;
+package projetBank.fr.banque.entities;
 
-public class CompteRemunere extends Compte implements ICompteRemunere{
+	class CompteRemunere extends Compte implements ICompteRemunere{
 
 	private float taux;
 

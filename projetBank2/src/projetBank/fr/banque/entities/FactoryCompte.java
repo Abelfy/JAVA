@@ -1,4 +1,4 @@
-package projetBank.fr.entities;
+package projetBank.fr.banque.entities;
 
 public final class FactoryCompte {
 

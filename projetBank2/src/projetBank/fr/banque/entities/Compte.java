@@ -1,6 +1,6 @@
-package projetBank.fr.entities;
+package projetBank.fr.banque.entities;
 
-public class Compte {
+	class Compte implements ICompte {
 
 	private long numero;
 	private TypeCompte type;
@@ -18,18 +18,23 @@ public class Compte {
 		this.numero = num;
 	}
 
+	@Override
 	public void ajouter(double unMontant){
 		this.setSolde(this.getSolde()+unMontant);
 	}
+	@Override
 	public void retirer(double unMontant){
 		this.setSolde(this.getSolde()-unMontant);
 	}
+	@Override
 	public long getNumero() {
 		return this.numero;
 	}
+	@Override
 	public TypeCompte getType() {
 		return this.type;
 	}
+	@Override
 	public double getSolde() {
 		return this.solde;
 	}

@@ -1,14 +1,14 @@
-package projetBank.fr.entities;
+package projetBank.fr.banque.entities;
 
 import java.util.Arrays;
 
-public class Client {
+	class Client implements IClient {
 
 	private String prenom;
 	private String nom;
 	private int age;
 	private long numero;
-	private Compte[] comptes;
+	private ICompte[] comptes;
 	public static final int NB_MAX_COMPTE = 5;
 
 
@@ -32,36 +32,45 @@ public class Client {
 	}
 
 
+	@Override
 	public String getPrenom() {
 		return this.prenom;
 	}
+	@Override
 	public String getNom() {
 		return this.nom;
 	}
+	@Override
 	public int getAge() {
 		return this.age;
 	}
+	@Override
 	public long getNumero() {
 		return this.numero;
 	}
+	@Override
 	public void setPrenom(String prenom) {
 		this.prenom = prenom;
 	}
+	@Override
 	public void setNom(String nom) {
 		this.nom = nom;
 	}
+	@Override
 	public void setAge(int age) {
 		this.age = age;
 	}
 
-	public void setComptes(Compte[] comptes) {
+	@Override
+	public void setComptes(ICompte[] comptes) {
 		this.comptes = comptes;
 	}
 
-	public void ajouterCompte(Compte unCompte){
+	@Override
+	public void ajouterCompte(ICompte unCompte){
 		if(this.comptes == null)
 		{
-				this.comptes = new Compte[1];
+				this.comptes = new ICompte[1];
 				this.comptes[0]=unCompte;
 		}
 		else if(this.comptes.length < Client.NB_MAX_COMPTE){
@@ -75,14 +84,16 @@ public class Client {
 		}
 	}
 
-	public Compte getCompte(int numeroCompte ){
+	@Override
+	public ICompte getCompte(int numeroCompte ){
 		if (this.comptes[numeroCompte] != null){
 			return this.comptes[numeroCompte];
 		}
 		return null;
 	}
 
-	public Compte[] getComptes(){
+	@Override
+	public ICompte[] getComptes(){
 
 		return this.comptes;
 	}
@@ -103,7 +114,7 @@ public class Client {
 		buff.append('\n');
 		if (this.comptes != null)
 		{
-			for (Compte compte : this.comptes) {
+			for (ICompte compte : this.comptes) {
 				buff.append(compte.toString()+'\n');
 			}
 		}

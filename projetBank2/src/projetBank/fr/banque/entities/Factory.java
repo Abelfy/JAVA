@@ -1,6 +1,6 @@
-package projetBank.fr.entities;
+package projetBank.fr.banque.entities;
 
-public final class Factory<T> {
+public final class Factory<T extends IEntite> {
 
 	private long num;
 	private Class<T> type;
@@ -9,11 +9,14 @@ public final class Factory<T> {
 		this.type = unType;
 	}
 
+
+
 	@SuppressWarnings("unchecked")
 	public T create(Object... objects)
 	{
+
 		if(objects.length == 0){
-			if(this.type == Client.class)
+			if(this.type == IClient.class)
 			{
 				return (T)new Client(this.num++);
 			}
@@ -59,11 +62,11 @@ public final class Factory<T> {
 					return (T)new Compte(this.num++,(TypeCompte)objects[0],(double)objects[1]);
 				}
 
-				else if(this.type == CompteRemunere.class)
+				else if(this.type == ICompteRemunere.class)
 				{
 					return (T)new CompteRemunere(this.num++,(TypeCompte)objects[0],(float)objects[1]);
 				}
-				else if(this.type == CompteASeuil.class)
+				else if(this.type == ICompteASeuil.class)
 				{
 					return (T)new CompteASeuil(this.num++,(TypeCompte)objects[0],(double)objects[1]);
 				}
@@ -80,11 +83,11 @@ public final class Factory<T> {
 			}
 			else if(objects[0].getClass() == TypeCompte.class)
 			{
-				if(this.type == CompteRemunere.class)
+				if(this.type == ICompteRemunere.class)
 				{
 					return (T)new CompteRemunere(this.num++,(TypeCompte)objects[0],(double)objects[1],(float)objects[2]);
 				}
-				else if(this.type == CompteASeuil.class)
+				else if(this.type == ICompteASeuil.class)
 				{
 					return (T)new CompteASeuil(this.num++,(TypeCompte)objects[0],(double)objects[1],(double)objects[2]);
 				}

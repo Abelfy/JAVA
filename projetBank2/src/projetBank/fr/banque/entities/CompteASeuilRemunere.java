@@ -1,7 +1,7 @@
-package projetBank.fr.entities;
+package projetBank.fr.banque.entities;
 
-public class CompteASeuilRemunere extends CompteRemunere implements ICompteASeuil
-{
+	class CompteASeuilRemunere extends CompteRemunere implements ICompteASeuil
+	{
 
 	private double seuil;
 
@@ -29,27 +29,29 @@ public class CompteASeuilRemunere extends CompteRemunere implements ICompteASeui
 
 	@Override
 	public void ajouter(double unMontant) {
-		// TODO Auto-generated method stub
 		super.ajouter(unMontant);
 	}
 	@Override
 	public void retirer(double unMontant) {
-		// TODO Auto-generated method stub
-		super.retirer(unMontant);
+		if(unMontant <= this.seuil)
+		{
+			super.retirer(unMontant);
+		}
+		else
+		{
+			System.err.println("Limite de retrait :" + this.seuil);
+		}
 	}
 	@Override
 	public long getNumero() {
-		// TODO Auto-generated method stub
 		return super.getNumero();
 	}
 	@Override
 	public TypeCompte getType() {
-		// TODO Auto-generated method stub
 		return super.getType();
 	}
 	@Override
 	public double getSolde() {
-		// TODO Auto-generated method stub
 		return super.getSolde();
 	}
 	@Override

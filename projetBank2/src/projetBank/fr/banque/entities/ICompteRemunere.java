@@ -1,6 +1,6 @@
-package projetBank.fr.entities;
+package projetBank.fr.banque.entities;
 
-public interface ICompteRemunere {
+public interface ICompteRemunere extends ICompte {
 
 	public double calculerInterets();
 	public void verserInterets();
