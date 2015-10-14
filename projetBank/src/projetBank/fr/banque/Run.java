@@ -11,7 +11,6 @@ public class Run {
 		Factory<CompteRemunere> fCmptRmnr = new Factory<>(CompteRemunere.class);
 		Factory<CompteASeuil> fCompteAS = new Factory<>(CompteASeuil.class);
 
-		Client c = fcc.create();
 
 		Object[] objects=new Object[2];
 		objects[0]=TypeCompte.COURRANT;
