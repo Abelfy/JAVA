@@ -71,10 +71,6 @@ public final class Factory<T extends IEntite> {
 				{
 					return (T)new CompteASeuil(numTemp,(TypeCompte)objects[0],(Double)objects[1]);
 				}
-				else if(this.type == CompteASeuilRemunere.class)
-				{
-					return (T)new CompteASeuilRemunere(numTemp,(TypeCompte)objects[0],(Double)objects[1]);
-				}
 			}
 		}
 		else if (objects.length == 3)
@@ -92,6 +88,12 @@ public final class Factory<T extends IEntite> {
 				{
 					return (T)new CompteASeuil(numTemp,(TypeCompte)objects[0],(Double)objects[1],(Double)objects[2]);
 				}
+			}
+		}
+		else if (objects.length == 4 ) {
+			if(this.type == ICompteASeuilRemunere.class)
+			{
+				return (T)new CompteASeuilRemunere(numTemp,(TypeCompte)objects[0],(Double)objects[1],(Float)objects[2],(Double)objects[3]);
 			}
 		}
 		System.err.println("Oublié un cas");

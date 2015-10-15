@@ -1,6 +1,8 @@
 package projetBank.fr.banque.entities;
 
-import java.util.Arrays;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 
 import projetBank.fr.banque.BanqueException;
 
@@ -10,7 +12,10 @@ import projetBank.fr.banque.BanqueException;
 	private String nom;
 	private Integer age;
 	private Long numero;
-	private ICompte[] comptes;
+	//private ICompte[] comptes;
+	Map<Long, ICompte> listeCompte;
+	private List<ICompte> comptes;
+
 	public static final int NB_MAX_COMPTE = 5;
 
 
@@ -65,21 +70,27 @@ import projetBank.fr.banque.BanqueException;
 
 	@Override
 	public void setComptes(ICompte[] comptes) {
-		this.comptes = comptes;
+		for (ICompte iCompte : comptes) {
+			this.comptes.add(iCompte);
+		}
 	}
 
 	@Override
 	public void ajouterCompte(ICompte unCompte) throws BanqueException
 	{
-		if(this.comptes == null)
+		if(this.listeCompte == null)
 		{
-				this.comptes = new ICompte[1];
-				this.comptes[0]=unCompte;
+				this.listeCompte = new Hashtable<Long, ICompte>();
+				this.listeCompte.put(unCompte.getNumero(), unCompte);
 		}
-		else if(this.comptes.length < Client.NB_MAX_COMPTE){
+		else if(this.listeCompte.size() < Client.NB_MAX_COMPTE){
 
-			this.comptes = Arrays.copyOf(this.comptes, this.comptes.length+1);
-			this.comptes[this.comptes.length-1] =unCompte;
+			//this.comptes = Arrays.copyOf(this.comptes, this.comptes.length+1)
+			this.listeCompte.put(unCompte.getNumero(), unCompte);
+			//			if(!this.comptes.add(unCompte))
+			//				{
+			//					throw new BanqueException("Impossible d'ajouter le compte");
+			//				}
 		}
 		else
 		{
@@ -88,17 +99,18 @@ import projetBank.fr.banque.BanqueException;
 	}
 
 	@Override
-	public ICompte getCompte(int numeroCompte ){
-		if (this.comptes[numeroCompte] != null){
-			return this.comptes[numeroCompte];
-		}
-		return null;
+	public ICompte getCompte(Long numeroCompte ){
+		return this.listeCompte.get(numeroCompte);
 	}
 
 	@Override
 	public ICompte[] getComptes(){
 
-		return this.comptes;
+		ICompte[] comptesTmp = new ICompte[this.listeCompte.size()];
+		for (int i = 0 ; i < this.listeCompte.size(); i++) {
+			comptesTmp[i]=this.listeCompte.get(Long.valueOf(i));
+		}
+		return comptesTmp;
 	}
 
 	@Override
@@ -115,9 +127,10 @@ import projetBank.fr.banque.BanqueException;
 		buff.append(this.getAge());
 		buff.append(']');
 		buff.append('\n');
-		if (this.comptes != null)
+		if (this.listeCompte != null)
 		{
-			for (ICompte compte : this.comptes) {
+			for (ICompte compte : this.listeCompte.values())
+			{
 				buff.append(compte.toString()+'\n');
 			}
 		}

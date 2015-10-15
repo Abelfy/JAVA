@@ -2,7 +2,7 @@ package projetBank.fr.banque.entities;
 
 import projetBank.fr.banque.BanqueException;
 
-class CompteASeuilRemunere extends CompteRemunere implements ICompteASeuil
+class CompteASeuilRemunere extends CompteRemunere implements ICompteASeuilRemunere
 	{
 
 	private Double seuil;
@@ -21,8 +21,8 @@ class CompteASeuilRemunere extends CompteRemunere implements ICompteASeuil
 	 * @param type
 	 * @param seuil
 	 */
-	public CompteASeuilRemunere(Long num, TypeCompte type, Double seuil) {
-		super(num, type);
+	public CompteASeuilRemunere(Long num, TypeCompte type,Double solde,Float Taux, Double seuil) {
+		super(num, type, solde,Taux);
 		this.seuil = seuil;
 	}
 

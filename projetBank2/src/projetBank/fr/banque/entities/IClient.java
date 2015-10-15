@@ -14,6 +14,6 @@ public interface IClient extends IEntite
 	public void setAge(Integer age);
 	public void setComptes(ICompte[] comptes);
 	public void ajouterCompte(ICompte unCompte) throws BanqueException;
-	public ICompte getCompte(int numeroCompte );
+	public ICompte getCompte(Long numeroCompte );
 	public ICompte[] getComptes();
 }

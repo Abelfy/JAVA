@@ -11,7 +11,7 @@ package projetBank.fr.banque.entities;
 		super(num, type);
 		this.setTaux(taux);
 	}
-	protected CompteRemunere(Long num, TypeCompte type,Double solde, Float taux) {
+	protected CompteRemunere(Long num, TypeCompte type, Double solde, Float taux) {
 		super(num,type, solde);
 		this.setTaux(taux) ;
 	}
