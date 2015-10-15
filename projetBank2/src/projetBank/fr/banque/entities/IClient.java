@@ -1,17 +1,19 @@
 package projetBank.fr.banque.entities;
 
+import projetBank.fr.banque.BanqueException;
+
 public interface IClient extends IEntite
 {
 	public String getPrenom();
 	public String getNom();
-	public int getAge();
+	public Integer getAge();
 	@Override
-	public long getNumero();
+	public Long getNumero();
 	public void setPrenom(String prenom);
 	public void setNom(String nom);
-	public void setAge(int age);
+	public void setAge(Integer age);
 	public void setComptes(ICompte[] comptes);
-	public void ajouterCompte(ICompte unCompte);
+	public void ajouterCompte(ICompte unCompte) throws BanqueException;
 	public ICompte getCompte(int numeroCompte );
 	public ICompte[] getComptes();
 }

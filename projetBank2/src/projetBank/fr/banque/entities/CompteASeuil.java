@@ -1,18 +1,20 @@
 package projetBank.fr.banque.entities;
 
+import projetBank.fr.banque.BanqueException;
+
 class CompteASeuil extends Compte implements ICompteASeuil {
 
-	private double seuil;
+	private Double seuil;
 
-	protected CompteASeuil(long num,TypeCompte type){
+	protected CompteASeuil(Long num,TypeCompte type){
 		super(num,type);
 	}
 	/**
 	 * @param type
 	 * @param seuil
 	 */
-	protected CompteASeuil(long num,TypeCompte type, double seuil) {
-		super(num,type,0);
+	protected CompteASeuil(Long num,TypeCompte type, Double seuil) {
+		super(num,type,new Double(100));
 		this.seuil = seuil;
 	}
 
@@ -21,18 +23,18 @@ class CompteASeuil extends Compte implements ICompteASeuil {
 	 * @param solde
 	 * @param seuil
 	 */
-	protected CompteASeuil(long num,TypeCompte type, double solde, double seuil) {
+	protected CompteASeuil(Long num,TypeCompte type, Double solde, Double seuil) {
 		super(num,type, solde);
 		this.seuil = seuil;
 	}
 
 	@Override
-	public double getSeuil() {
+	public Double getSeuil() {
 		return this.seuil;
 	}
 	@Override
-	public void setSeuil(double seuil) {
-		if(seuil > 0)
+	public void setSeuil(Double seuil) {
+		if( seuil.doubleValue() > 0)
 		{
 		this.seuil = seuil;
 		}
@@ -48,15 +50,15 @@ class CompteASeuil extends Compte implements ICompteASeuil {
 		return builder.toString();
 	}
 	@Override
-	public void retirer(double uneValeur) {
-		if(uneValeur <= this.seuil)
+	public void retirer(Double uneValeur) throws BanqueException
+	{
+		if(this.seuil.doubleValue() >= uneValeur.doubleValue() )
 		{
 			super.retirer(uneValeur);
 		}
 		else
 		{
-			//throw new BanqueException("Dépassement du seuil");
-			System.err.println("Limite de retrait :" + this.seuil);
+			throw new BanqueException("Retrait maximum autorisé : "+this.seuil );
 		}
 	}
 }

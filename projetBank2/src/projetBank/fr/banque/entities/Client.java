@@ -2,12 +2,14 @@ package projetBank.fr.banque.entities;
 
 import java.util.Arrays;
 
+import projetBank.fr.banque.BanqueException;
+
 	class Client implements IClient {
 
 	private String prenom;
 	private String nom;
-	private int age;
-	private long numero;
+	private Integer age;
+	private Long numero;
 	private ICompte[] comptes;
 	public static final int NB_MAX_COMPTE = 5;
 
@@ -15,16 +17,16 @@ import java.util.Arrays;
 	/**
 	 *
 	 */
-	protected Client(long num){
-		this(num,"","",0);
+	protected Client(Long num){
+		this(num,"","",new Integer(0));
 	}
-	protected Client(long num, String nom){
-		this(num,nom,"",0);
+	protected Client(Long num, String nom){
+		this(num,nom,"",new Integer(0));
 	}
-	protected Client(long num, String nom, String prenom) {
-		this(num,nom,prenom,0);
+	protected Client(Long num, String nom, String prenom) {
+		this(num,nom,prenom,new Integer(0));
 	}
-	protected Client(long num,String nom, String prenom, int age) {
+	protected Client(Long num,String nom, String prenom, Integer age) {
 		this.setNom(nom);
 		this.setPrenom(prenom);
 		this.setAge(age);
@@ -41,11 +43,11 @@ import java.util.Arrays;
 		return this.nom;
 	}
 	@Override
-	public int getAge() {
+	public Integer getAge() {
 		return this.age;
 	}
 	@Override
-	public long getNumero() {
+	public Long getNumero() {
 		return this.numero;
 	}
 	@Override
@@ -57,7 +59,7 @@ import java.util.Arrays;
 		this.nom = nom;
 	}
 	@Override
-	public void setAge(int age) {
+	public void setAge(Integer age) {
 		this.age = age;
 	}
 
@@ -67,7 +69,8 @@ import java.util.Arrays;
 	}
 
 	@Override
-	public void ajouterCompte(ICompte unCompte){
+	public void ajouterCompte(ICompte unCompte) throws BanqueException
+	{
 		if(this.comptes == null)
 		{
 				this.comptes = new ICompte[1];
@@ -80,7 +83,7 @@ import java.util.Arrays;
 		}
 		else
 		{
-			System.err.println("Impossible d'ajouter le compte.");
+			throw new BanqueException("Le client possède déja "+Client.NB_MAX_COMPTE+ " comptes");
 		}
 	}
 

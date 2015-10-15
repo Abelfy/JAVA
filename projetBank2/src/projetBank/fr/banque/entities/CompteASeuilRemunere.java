@@ -1,9 +1,11 @@
 package projetBank.fr.banque.entities;
 
-	class CompteASeuilRemunere extends CompteRemunere implements ICompteASeuil
+import projetBank.fr.banque.BanqueException;
+
+class CompteASeuilRemunere extends CompteRemunere implements ICompteASeuil
 	{
 
-	private double seuil;
+	private Double seuil;
 
 
 
@@ -11,7 +13,7 @@ package projetBank.fr.banque.entities;
 	 * @param num
 	 * @param type
 	 */
-	public CompteASeuilRemunere(long num, TypeCompte type) {
+	public CompteASeuilRemunere(Long num, TypeCompte type) {
 		super(num, type);
 	}
 	/**
@@ -19,7 +21,7 @@ package projetBank.fr.banque.entities;
 	 * @param type
 	 * @param seuil
 	 */
-	public CompteASeuilRemunere(long num, TypeCompte type, double seuil) {
+	public CompteASeuilRemunere(Long num, TypeCompte type, Double seuil) {
 		super(num, type);
 		this.seuil = seuil;
 	}
@@ -28,22 +30,23 @@ package projetBank.fr.banque.entities;
 
 
 	@Override
-	public void ajouter(double unMontant) {
+	public void ajouter(Double unMontant) {
 		super.ajouter(unMontant);
 	}
 	@Override
-	public void retirer(double unMontant) {
-		if(unMontant <= this.seuil)
+	public void retirer(Double unMontant) throws BanqueException
+	{
+		if(this.seuil.doubleValue() <= unMontant.doubleValue() )
 		{
 			super.retirer(unMontant);
 		}
 		else
 		{
-			System.err.println("Limite de retrait :" + this.seuil);
+			throw new BanqueException("Retrait maximum autorisé :"+this.seuil );
 		}
 	}
 	@Override
-	public long getNumero() {
+	public Long getNumero() {
 		return super.getNumero();
 	}
 	@Override
@@ -51,20 +54,20 @@ package projetBank.fr.banque.entities;
 		return super.getType();
 	}
 	@Override
-	public double getSolde() {
+	public Double getSolde() {
 		return super.getSolde();
 	}
 	@Override
-	public double getSeuil() {
+	public Double getSeuil() {
 		return this.seuil;
 	}
 
 	@Override
-	public void setSeuil(double seuil) {
+	public void setSeuil(Double seuil) {
 		this.seuil = seuil;
 	}
 	@Override
-	public double calculerInterets() {
+	public Double calculerInterets() {
 		return super.calculerInterets();
 	}
 	@Override
@@ -82,11 +85,11 @@ package projetBank.fr.banque.entities;
 		return builder.toString();
 	}
 	@Override
-	public float getTaux() {
+	public Float getTaux() {
 		return super.getTaux();
 	}
 	@Override
-	public void setTaux(float taux) {
+	public void setTaux(Float taux) {
 		super.setTaux(taux);
 	}
 }

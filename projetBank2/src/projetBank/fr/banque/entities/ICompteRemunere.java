@@ -2,8 +2,8 @@ package projetBank.fr.banque.entities;
 
 public interface ICompteRemunere extends ICompte {
 
-	public double calculerInterets();
+	public Double calculerInterets();
 	public void verserInterets();
-	public float getTaux();
-	public void setTaux(float taux);
+	public Float getTaux();
+	public void setTaux(Float taux);
 }

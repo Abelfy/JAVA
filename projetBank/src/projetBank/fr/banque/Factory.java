@@ -9,7 +9,7 @@ public final class Factory<T> {
 		this.type = unType;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "boxing" })
 	public T create(Object... objects)
 	{
 		if(objects.length == 0){
@@ -53,16 +53,16 @@ public final class Factory<T> {
 			else if(objects[0].getClass() == TypeCompte.class){
 				if(this.type == Compte.class)
 				{
-					return (T)new Compte(this.num++,(TypeCompte)objects[0],(double)objects[1]);
+					return (T)new Compte(this.num++,(TypeCompte)objects[0],(Double)objects[1]);
 				}
 
 				else if(this.type == CompteRemunere.class)
 				{
-					return (T)new CompteRemunere(this.num++,(TypeCompte)objects[0],(double)objects[1]);
+					return (T)new CompteRemunere(this.num++,(TypeCompte)objects[0],(Double)objects[1]);
 				}
 				else if(this.type == CompteASeuil.class)
 				{
-					return (T)new CompteASeuil(this.num++,(TypeCompte)objects[0],(double)objects[1]);
+					return (T)new CompteASeuil(this.num++,(TypeCompte)objects[0],(Double)objects[1]);
 				}
 
 			}
@@ -76,11 +76,11 @@ public final class Factory<T> {
 			{
 				if(this.type == CompteRemunere.class)
 				{
-					return (T)new CompteRemunere(this.num++,(TypeCompte)objects[0],(double)objects[1],(double)objects[2]);
+					return (T)new CompteRemunere(this.num++,(TypeCompte)objects[0],(Double)objects[1],(Double)objects[2]);
 				}
 				else if(this.type == CompteASeuil.class)
 				{
-					return (T)new CompteASeuil(this.num++,(TypeCompte)objects[0],(double)objects[1],(double)objects[2]);
+					return (T)new CompteASeuil(this.num++,(TypeCompte)objects[0],(Double)objects[1],(Double)objects[2]);
 				}
 			}
 		}

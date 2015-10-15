@@ -11,14 +11,14 @@ public final class FactoryCompte {
 
 	protected Compte createCompte()
 	{
-		return new Compte(this.num++);
+		return new Compte(Long.valueOf(this.num++));
 
 	}
 	protected Compte createCompte(TypeCompte type){
-		return new Compte(this.num++,type);
+		return new Compte(Long.valueOf(this.num++),type);
 	}
-	protected Compte createCompte(TypeCompte type,double solde){
-		return new Compte(this.num++,type,solde);
+	protected Compte createCompte(TypeCompte type,Double solde){
+		return new Compte(Long.valueOf(this.num++),type,solde);
 		}
 
 	public Compte getCompte()
@@ -29,7 +29,7 @@ public final class FactoryCompte {
 	{
 		return this.createCompte(type);
 	}
-	public Compte getCompte(TypeCompte type,double solde)
+	public Compte getCompte(TypeCompte type,Double solde)
 	{
 		return this.createCompte(type,solde);
 	}

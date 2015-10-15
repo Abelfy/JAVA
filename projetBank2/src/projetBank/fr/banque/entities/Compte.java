@@ -1,33 +1,35 @@
 package projetBank.fr.banque.entities;
 
-	class Compte implements ICompte {
+import projetBank.fr.banque.BanqueException;
 
-	private long numero;
+class Compte implements ICompte {
+
+	private Long numero;
 	private TypeCompte type;
-	private double solde;
+	private Double solde;
 
-	protected Compte(long num) {
-		this(num,TypeCompte.COURRANT,100);
+	protected Compte(Long num) {
+		this(num,TypeCompte.COURRANT,new Double(100));
 	}
-	protected Compte(long num, TypeCompte type) {
-		this(num,type,100);
+	protected Compte(Long num, TypeCompte type) {
+		this(num,type,new Double(100));
 	}
-	protected Compte(long num,TypeCompte type, double solde) {
+	protected Compte(Long num,TypeCompte type, Double solde) {
 		this.setType(type);
 		this.setSolde(solde);
 		this.numero = num;
 	}
 
 	@Override
-	public void ajouter(double unMontant){
-		this.setSolde(this.getSolde()+unMontant);
+	public void ajouter(Double unMontant){
+		this.setSolde(Double.valueOf(this.getSolde().doubleValue()+unMontant.doubleValue()));
 	}
 	@Override
-	public void retirer(double unMontant){
-		this.setSolde(this.getSolde()-unMontant);
+	public void retirer(Double unMontant) throws BanqueException{
+		this.setSolde(Double.valueOf(this.getSolde().doubleValue()-unMontant.doubleValue()));
 	}
 	@Override
-	public long getNumero() {
+	public Long getNumero() {
 		return this.numero;
 	}
 	@Override
@@ -35,13 +37,13 @@ package projetBank.fr.banque.entities;
 		return this.type;
 	}
 	@Override
-	public double getSolde() {
+	public Double getSolde() {
 		return this.solde;
 	}
 	private void setType(TypeCompte type) {
 		this.type = type;
 	}
-	private void setSolde(double solde) {
+	private void setSolde(Double solde) {
 		this.solde = solde;
 	}
 	@Override
@@ -71,13 +73,7 @@ package projetBank.fr.banque.entities;
 		}
 		if(obj instanceof Compte){
 			Compte cTmp = (Compte)obj;
-
 			return cTmp.getNumero() == this.getNumero();
-			//return (this.getNom() == cTmp.getNom()) || (this.getNom().equals(cTmp.getNom()) &&
-			//		(this.getPrenom() == cTmp.getPrenom())) || ((this.getPrenom().equals(cTmp.getPrenom()) &&
-			//		(this.getAge() == cTmp.getAge()) &&
-			//		(this. getNumeroDeType() == cTmp. getNumeroDeType())) &&
-			//		this.comptes.equals(cTmp.comptes));
 		}
 
 		return false;

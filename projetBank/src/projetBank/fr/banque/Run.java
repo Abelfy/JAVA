@@ -2,6 +2,7 @@ package projetBank.fr.banque;
 
 public class Run {
 
+	@SuppressWarnings("boxing")
 	public static void main(String[] args) {
 		//long start = System.currentTimeMillis();
 
@@ -21,7 +22,7 @@ public class Run {
 		objects=new Object[3];
 		objects[0]="Belfy";
 		objects[1]="Adrien";
-		objects[2]=25;
+		objects[2]=new Integer(25);
 		Client c0 = fcc.create(objects);
 
 		System.out.println(cmpt.toString());
