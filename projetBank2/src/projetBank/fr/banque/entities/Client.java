@@ -1,12 +1,14 @@
 package projetBank.fr.banque.entities;
 
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import projetBank.fr.banque.BanqueException;
 
-	class Client implements IClient {
+	class Client implements IClient
+{
 
 	private String prenom;
 	private String nom;
@@ -16,7 +18,7 @@ import projetBank.fr.banque.BanqueException;
 	Map<Long, ICompte> listeCompte;
 	private List<ICompte> comptes;
 
-	public static final int NB_MAX_COMPTE = 5;
+	public static final int NB_MAX_COMPTE = 10;
 
 
 	/**
@@ -69,12 +71,12 @@ import projetBank.fr.banque.BanqueException;
 	}
 
 	@Override
-	public void setComptes(ICompte[] comptes) {
+	public void setComptes(ICompte[] comptes) throws BanqueException
+	{
 		for (ICompte iCompte : comptes) {
-			this.comptes.add(iCompte);
+				this.ajouterCompte(iCompte);
 		}
 	}
-
 	@Override
 	public void ajouterCompte(ICompte unCompte) throws BanqueException
 	{
@@ -83,35 +85,35 @@ import projetBank.fr.banque.BanqueException;
 				this.listeCompte = new Hashtable<Long, ICompte>();
 				this.listeCompte.put(unCompte.getNumero(), unCompte);
 		}
-		else if(this.listeCompte.size() < Client.NB_MAX_COMPTE){
-
-			//this.comptes = Arrays.copyOf(this.comptes, this.comptes.length+1)
-			this.listeCompte.put(unCompte.getNumero(), unCompte);
-			//			if(!this.comptes.add(unCompte))
-			//				{
-			//					throw new BanqueException("Impossible d'ajouter le compte");
-			//				}
+		else if(this.listeCompte.size() < Client.NB_MAX_COMPTE)
+		{
+			if(this.listeCompte.put(unCompte.getNumero(), unCompte) != null)
+			{
+				StringBuilder builder = new StringBuilder();
+				builder.append("Le compte ");
+				builder.append(unCompte.getNumero());
+				builder.append(" est déja relier au client : ");
+				builder.append(this.getNumero());
+				builder.append(" - ");
+				builder.append(this.nom);
+				builder.append(" ");
+				builder.append(this.prenom);
+				throw new BanqueException(builder.toString());
+			}
 		}
 		else
 		{
 			throw new BanqueException("Le client possède déja "+Client.NB_MAX_COMPTE+ " comptes");
 		}
 	}
-
 	@Override
 	public ICompte getCompte(Long numeroCompte ){
 		return this.listeCompte.get(numeroCompte);
 	}
-
 	@Override
 	public ICompte[] getComptes(){
-
-		ICompte[] comptesTmp = new ICompte[this.listeCompte.size()];
-		for (int i = 0 ; i < this.listeCompte.size(); i++) {
-			comptesTmp[i]=this.listeCompte.get(Long.valueOf(i));
+		return this.listeCompte.values().toArray(new ICompte[this.listeCompte.size()]);
 		}
-		return comptesTmp;
-	}
 
 	@Override
 	public String toString(){
@@ -129,16 +131,22 @@ import projetBank.fr.banque.BanqueException;
 		buff.append('\n');
 		if (this.listeCompte != null)
 		{
-			for (ICompte compte : this.listeCompte.values())
+
+			//buff.append(this.listeCompte); <=== C'est moche
+			Iterator<ICompte> iter = this.listeCompte.values().iterator();
+			while(iter.hasNext())
 			{
+				ICompte compte = iter.next();
 				buff.append(compte.toString()+'\n');
 			}
+//			for (ICompte compte : this.listeCompte.values())
+//			{
+//				buff.append(compte.toString()+'\n');
+//			}
 		}
 
 		return buff.toString();
 	}
-
-
 	@Override
 	public boolean equals(Object obj) {
 		if(obj == null)

@@ -2,7 +2,7 @@ package projetBank.fr.banque.entities;
 
 import projetBank.fr.banque.BanqueException;
 
-class Compte implements ICompte {
+class Compte implements ICompte , Comparable<ICompte>{
 
 	private Long numero;
 	private TypeCompte type;
@@ -26,7 +26,21 @@ class Compte implements ICompte {
 	}
 	@Override
 	public void retirer(Double unMontant) throws BanqueException{
+
 		this.setSolde(Double.valueOf(this.getSolde().doubleValue()-unMontant.doubleValue()));
+	}
+	@Override
+	public int compareTo(ICompte o) {
+		if(this.getNumero().longValue() < o
+				.getNumero().longValue())
+		{
+			return -1;
+		}
+		else if(this.getNumero().longValue() > o.getNumero().longValue())
+		{
+			return 1;
+		}
+		return 0;
 	}
 	@Override
 	public Long getNumero() {
@@ -78,7 +92,6 @@ class Compte implements ICompte {
 
 		return false;
 	}
-
 	@Override
 	public int hashCode() {
 		String b = this.getClass().getName()+"_"+this.toString();
