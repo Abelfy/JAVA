@@ -100,6 +100,7 @@ import projetBank.fr.banque.BanqueException;
 				builder.append(this.prenom);
 				throw new BanqueException(builder.toString());
 			}
+
 		}
 		else
 		{
@@ -137,7 +138,8 @@ import projetBank.fr.banque.BanqueException;
 			while(iter.hasNext())
 			{
 				ICompte compte = iter.next();
-				buff.append(compte.toString()+'\n');
+				buff.append(compte.toString());
+				buff.append('\n');
 			}
 //			for (ICompte compte : this.listeCompte.values())
 //			{
