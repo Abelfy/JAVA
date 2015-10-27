@@ -1,11 +1,14 @@
 package projetBank.fr.banque.entities;
 
-public final class FactoryCompte {
+public final class FactoryCompte
+{
 
 	private static FactoryCompte myInstance;
 
 	private long num;
-	private FactoryCompte(){
+
+	private FactoryCompte()
+	{
 
 	}
 
@@ -14,34 +17,39 @@ public final class FactoryCompte {
 		return new Compte(Long.valueOf(this.num++));
 
 	}
-	protected Compte createCompte(TypeCompte type){
-		return new Compte(Long.valueOf(this.num++),type);
+
+	protected Compte createCompte(String label)
+	{
+		return new Compte(Long.valueOf(this.num++), label);
 	}
-	protected Compte createCompte(TypeCompte type,Double solde){
-		return new Compte(Long.valueOf(this.num++),type,solde);
-		}
+
+	protected Compte createCompte(String label, Double solde)
+	{
+		return new Compte(Long.valueOf(this.num++), label, solde);
+	}
 
 	public Compte getCompte()
 	{
 		return this.createCompte();
 	}
-	public Compte getCompte(TypeCompte type)
+
+	public Compte getCompte(String label)
 	{
-		return this.createCompte(type);
-	}
-	public Compte getCompte(TypeCompte type,Double solde)
-	{
-		return this.createCompte(type,solde);
+		return this.createCompte(label);
 	}
 
+	public Compte getCompte(String label, Double solde)
+	{
+		return this.createCompte(label, solde);
+	}
 
-	public static synchronized FactoryCompte getInstance(){
-		if(FactoryCompte.myInstance == null)
+	public static synchronized FactoryCompte getInstance()
+	{
+		if (FactoryCompte.myInstance == null)
 		{
 			FactoryCompte.myInstance = new FactoryCompte();
 		}
 		return FactoryCompte.myInstance;
 	}
-
 
 }

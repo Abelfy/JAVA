@@ -2,19 +2,23 @@ package projetBank.fr.banque.entities;
 
 import projetBank.fr.banque.BanqueException;
 
-class CompteASeuil extends Compte implements ICompteASeuil {
+public class CompteASeuil extends Compte implements ICompteASeuil
+{
 
 	private Double seuil;
 
-	protected CompteASeuil(Long num,TypeCompte type){
-		super(num,type);
+	public CompteASeuil(Long num, String label)
+	{
+		super(num, label);
 	}
+
 	/**
 	 * @param type
 	 * @param seuil
 	 */
-	protected CompteASeuil(Long num,TypeCompte type, Double seuil) {
-		super(num,type,new Double(100));
+	public CompteASeuil(Long num, String label, Double seuil)
+	{
+		super(num, label, new Double(100));
 		this.seuil = seuil;
 	}
 
@@ -23,42 +27,49 @@ class CompteASeuil extends Compte implements ICompteASeuil {
 	 * @param solde
 	 * @param seuil
 	 */
-	protected CompteASeuil(Long num,TypeCompte type, Double solde, Double seuil) {
-		super(num,type, solde);
+	public CompteASeuil(Long num, String label, Double solde, Double seuil)
+	{
+		super(num, label, solde);
 		this.seuil = seuil;
 	}
 
 	@Override
-	public Double getSeuil() {
+	public Double getSeuil()
+	{
 		return this.seuil;
 	}
+
 	@Override
-	public void setSeuil(Double seuil) {
-		if( seuil.doubleValue() > 0)
+	public void setSeuil(Double seuil)
+	{
+		if (seuil.doubleValue() > 0)
 		{
-		this.seuil = seuil;
+			this.seuil = seuil;
 		}
 	}
+
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		StringBuilder builder = new StringBuilder();
 		builder.append(super.toString());
-		builder.delete(builder.length()-1, builder.length());
+		builder.delete(builder.length() - 1, builder.length());
 		builder.append(", Seuil :");
 		builder.append(this.getSeuil());
 		builder.append(']');
 		return builder.toString();
 	}
+
 	@Override
 	public void retirer(Double uneValeur) throws BanqueException
 	{
-		if(this.seuil.doubleValue() >= uneValeur.doubleValue() )
+		if (this.seuil.doubleValue() >= uneValeur.doubleValue())
 		{
 			super.retirer(uneValeur);
 		}
 		else
 		{
-			throw new BanqueException("Retrait maximum autorisé : "+this.seuil );
+			throw new BanqueException("Retrait maximum autorisé : " + this.seuil);
 		}
 	}
 }
