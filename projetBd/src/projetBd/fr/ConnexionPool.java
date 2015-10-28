@@ -10,7 +10,7 @@ public class ConnexionPool
 	private String URL;
 	private String user;
 	private String passWord;
-	private String nomDuDriver;
+	//private String nomDuDriver;
 	private List<Connection> connexions;
 	public final static  int MAX_CONCURRENT_CONNECTIONS = 151;
 

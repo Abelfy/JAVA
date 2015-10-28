@@ -13,6 +13,8 @@ import java.util.List;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
+import projetBank.fr.banque.BanqueException;
+import projetBank.fr.banque.DateInvalid;
 import projetBank.fr.banque.entities.Client;
 import projetBank.fr.banque.entities.Compte;
 import projetBank.fr.banque.entities.CompteASeuil;
@@ -25,28 +27,9 @@ import projetBank.fr.banque.entities.Operation;
 
 public class DBUtil
 {
-	private String url = "jdbc:mysql://localhost:3306/banque";
-	private String login = "root";
-	private String password = "A130890b!!";
-	Connection connexion = null;
-	PreparedStatement ste = null;
-	ResultSet resultat = null;
+	private ComboPooledDataSource cpds = null;
+	private Connection connexion = null;
 
-	/**
-	 *
-	 */
-	public DBUtil()
-	{
-		// this("","","");
-	}
-
-	/**
-	 * @param url
-	 */
-	public DBUtil(String url)
-	{
-		this.setUrl(url);
-	}
 
 	/**
 	 * @param url
@@ -55,54 +38,16 @@ public class DBUtil
 	 */
 	public DBUtil(String url, String login, String password)
 	{
-		this.setUrl(url);
-		this.setLogin(login);
-		this.setPassword(password);
-	}
-
-	private String getLogin()
-	{
-		return this.login;
-	}
-
-	private String getPassword()
-	{
-		return this.password;
-	}
-
-	private String getUrl()
-	{
-		return this.url;
-	}
-
-	private void setLogin(String login)
-	{
-		this.login = login;
-	}
-
-	private void setPassword(String password)
-	{
-		this.password = password;
-	}
-
-	private void setUrl(String url)
-	{
-		this.url = url;
-	}
-
-	public void connexion() throws SQLException, ClassNotFoundException
-	{
-		ComboPooledDataSource cpds = new ComboPooledDataSource();
+		this.cpds = new ComboPooledDataSource();
 		String nomDuDriver = "com.mysql.jdbc.Driver";
 		try
 		{
-			cpds.setDriverClass(nomDuDriver);
-			cpds.setUser(this.getLogin());
-			cpds.setPassword(this.getPassword());
-			cpds.setJdbcUrl(this.getUrl());
-			cpds.setMaxPoolSize(151);
-			cpds.setCheckoutTimeout(10000);;
-			this.connexion=cpds.getConnection();
+			this.cpds.setDriverClass(nomDuDriver);
+			this.cpds.setUser(login);
+			this.cpds.setPassword(password);
+			this.cpds.setJdbcUrl(url);
+			this.cpds.setMaxPoolSize(151);
+			this.cpds.setCheckoutTimeout(10000);
 		}
 		catch (PropertyVetoException e)
 		{
@@ -111,73 +56,84 @@ public class DBUtil
 		}
 	}
 
-	public void close() throws SQLException
+	public void connexion()
 	{
-		SQLException ez = null;
 		try
 		{
-			if (this.resultat != null)
-			{
-				this.resultat.close();
-			}
+			this.connexion= this.cpds.getConnection();
 		}
 		catch (SQLException e)
 		{
-			ez = e;
-		}
-
-		try
-		{
-			if (this.ste != null)
-			{
-				this.ste.close();
-			}
-		}
-		catch (SQLException e)
-		{
-			ez = e;
-		}
-
-		try
-		{
-			if (this.connexion != null)
-			{
-				this.connexion.close();
-			}
-		}
-		catch (SQLException e)
-		{
-			ez = e;
-		}
-		if (ez != null)
-		{
-			throw ez;
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
+	public void closeReaders( Statement ste ,ResultSet resultat) throws SQLException
+	{
+		if(resultat != null)
+		{
+			try
+			{
+				resultat.close();
+			}
+			catch (SQLException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		if(ste != null)
+		{
+			try
+			{
+				ste.close();
+			}
+			catch (SQLException e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void close()
+	{
+		if(this.connexion != null)
+		{
+			try
+			{
+				this.connexion.close();
+			}
+			catch (SQLException e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
 	public List<IClient> recupererClient() throws SQLException
 	{
 		SQLException ez = null;
 		List<IClient> list = new ArrayList<IClient>();
+		PreparedStatement ste = null;
+		ResultSet resultat = null;;
 		try
 		{
 			String requete = "SELECT id,nom,prenom,Year(now()) - Year(dateDeNaissance) +"
 					+ " (Format(dateDeNaissance, 'mmdd') > Format(now(), 'mmdd')) as age"
 					+ ", sex,derniereConnection,adresse,codePostal,telephone FROM banque.utilisateur;";
 
-			this.ste = this.connexion.prepareStatement(requete);
+			ste = this.connexion.prepareStatement(requete);
 			// 4 - Recuperer le resulat
-			this.resultat = this.ste.executeQuery();
+			resultat = ste.executeQuery();
 
-			while (this.resultat.next())
+			while (resultat.next())
 			{
-				IClient clt = new Client(Long.valueOf(this.resultat.getLong("id")), this.resultat.getString("nom"),
-						this.resultat.getString("prenom"), Integer.valueOf(this.resultat.getInt("age")));
-				clt.setSexe(this.resultat.getInt("sex"));
-				clt.setDerniereConnexion(this.resultat.getDate("derniereConnection"));
-				clt.setAdresse(this.resultat.getString("adresse"));
-				clt.setCodePostal(Integer.valueOf(this.resultat.getInt("codePostal")));
-				clt.setTelephone(this.resultat.getString("telephone"));
+				IClient clt = new Client(Long.valueOf(resultat.getLong("id")), resultat.getString("nom"),
+						resultat.getString("prenom"), Integer.valueOf(resultat.getInt("age")));
+				clt.setSexe(resultat.getInt("sex"));
+				clt.setDerniereConnexion(resultat.getDate("derniereConnection"));
+				clt.setAdresse(resultat.getString("adresse"));
+				clt.setCodePostal(Integer.valueOf(resultat.getInt("codePostal")));
+				clt.setTelephone(resultat.getString("telephone"));
 				list.add(clt);
 			}
 		}
@@ -187,22 +143,7 @@ public class DBUtil
 		}
 		finally
 		{
-			try
-			{
-				this.resultat.close();
-				try
-				{
-					this.ste.close();
-				}
-				catch (SQLException e)
-				{
-					ez = e;
-				}
-			}
-			catch (SQLException e)
-			{
-				ez = e;
-			}
+			this.closeReaders(ste, resultat);
 
 		}
 		if (ez != null)
@@ -217,41 +158,43 @@ public class DBUtil
 	{
 		SQLException ez = null;
 		List<ICompte> list = new ArrayList<ICompte>();
+		PreparedStatement ste = null;
+		ResultSet resultat = null;
 
 		try
 		{
 			String requete = "SELECT id,libelle,solde,decouvert,taux FROM banque.compte;";
-			this.ste = this.connexion.prepareStatement(requete);
+			ste = this.connexion.prepareStatement(requete);
 			// 4 - Recuperer le resulat
-			this.resultat = this.ste.executeQuery();
-			while (this.resultat.next())
+			resultat = ste.executeQuery();
+			while (resultat.next())
 			{
 				ICompte cmpt = null;
-				String libelle = this.resultat.getString("libelle");
-				Double solde = Double.valueOf(this.resultat.getDouble("solde"));
-				Double decouvert = Double.valueOf(this.resultat.getDouble("decouvert"));
-				if (this.resultat.wasNull())
+				String libelle = resultat.getString("libelle");
+				Double solde = Double.valueOf(resultat.getDouble("solde"));
+				Double decouvert = Double.valueOf(resultat.getDouble("decouvert"));
+				if (resultat.wasNull())
 				{
-					Float taux = Float.valueOf(this.resultat.getFloat("taux"));
-					if (this.resultat.wasNull())
+					Float taux = Float.valueOf(resultat.getFloat("taux"));
+					if (resultat.wasNull())
 					{
-						cmpt = new Compte(Long.valueOf(this.resultat.getLong("id")), libelle, solde);
+						cmpt = new Compte(Long.valueOf(resultat.getLong("id")), libelle, solde);
 					}
 					else
 					{
-						cmpt = new CompteRemunere(Long.valueOf(this.resultat.getLong("id")), libelle, solde, taux);
+						cmpt = new CompteRemunere(Long.valueOf(resultat.getLong("id")), libelle, solde, taux);
 					}
 				}
 				else
 				{
-					Float taux = Float.valueOf(this.resultat.getFloat("taux"));
-					if (this.resultat.wasNull())
+					Float taux = Float.valueOf(resultat.getFloat("taux"));
+					if (resultat.wasNull())
 					{
-						cmpt = new CompteASeuil(Long.valueOf(this.resultat.getLong("id")), libelle, solde, decouvert);
+						cmpt = new CompteASeuil(Long.valueOf(resultat.getLong("id")), libelle, solde, decouvert);
 					}
 					else
 					{
-						cmpt = new CompteASeuilRemunere(Long.valueOf(this.resultat.getLong("id")), libelle, solde, taux,
+						cmpt = new CompteASeuilRemunere(Long.valueOf(resultat.getLong("id")), libelle, solde, taux,
 								decouvert);
 					}
 				}
@@ -264,23 +207,7 @@ public class DBUtil
 		}
 		finally
 		{
-			try
-			{
-				this.resultat.close();
-				try
-				{
-					this.ste.close();
-				}
-				catch (SQLException e)
-				{
-					ez = e;
-				}
-			}
-			catch (SQLException e)
-			{
-				ez = e;
-			}
-
+			this.closeReaders(ste, resultat);
 		}
 		if (ez != null)
 		{
@@ -293,42 +220,44 @@ public class DBUtil
 	{
 		SQLException ez = null;
 		ICompte cmpt = null;
+		PreparedStatement ste = null;
+		ResultSet resultat = null;
 
 		try
 		{
 			String requete = "SELECT id,libelle,solde,decouvert,taux FROM banque.compte WHERE id=?;";
-			this.ste = this.connexion.prepareStatement(requete);
-			this.ste.setInt(1, cpId);
+			ste = this.connexion.prepareStatement(requete);
+			ste.setInt(1, cpId);
 			// 4 - Recuperer le resulat
-			this.resultat = this.ste.executeQuery();
-			while (this.resultat.next())
+			resultat = ste.executeQuery();
+			while (resultat.next())
 			{
 
-				String libelle = this.resultat.getString("libelle");
-				Double solde = Double.valueOf(this.resultat.getDouble("solde"));
-				Double decouvert = Double.valueOf(this.resultat.getDouble("decouvert"));
-				if (this.resultat.wasNull())
+				String libelle = resultat.getString("libelle");
+				Double solde = Double.valueOf(resultat.getDouble("solde"));
+				Double decouvert = Double.valueOf(resultat.getDouble("decouvert"));
+				if (resultat.wasNull())
 				{
-					Float taux = Float.valueOf(this.resultat.getFloat("taux"));
-					if (this.resultat.wasNull())
+					Float taux = Float.valueOf(resultat.getFloat("taux"));
+					if (resultat.wasNull())
 					{
-						cmpt = new Compte(Long.valueOf(this.resultat.getLong("id")), libelle, solde);
+						cmpt = new Compte(Long.valueOf(resultat.getLong("id")), libelle, solde);
 					}
 					else
 					{
-						cmpt = new CompteRemunere(Long.valueOf(this.resultat.getLong("id")), libelle, solde, taux);
+						cmpt = new CompteRemunere(Long.valueOf(resultat.getLong("id")), libelle, solde, taux);
 					}
 				}
 				else
 				{
-					Float taux = Float.valueOf(this.resultat.getFloat("taux"));
-					if (this.resultat.wasNull())
+					Float taux = Float.valueOf(resultat.getFloat("taux"));
+					if (resultat.wasNull())
 					{
-						cmpt = new CompteASeuil(Long.valueOf(this.resultat.getLong("id")), libelle, solde, decouvert);
+						cmpt = new CompteASeuil(Long.valueOf(resultat.getLong("id")), libelle, solde, decouvert);
 					}
 					else
 					{
-						cmpt = new CompteASeuilRemunere(Long.valueOf(this.resultat.getLong("id")), libelle, solde, taux,
+						cmpt = new CompteASeuilRemunere(Long.valueOf(resultat.getLong("id")), libelle, solde, taux,
 								decouvert);
 					}
 				}
@@ -340,23 +269,10 @@ public class DBUtil
 		}
 		finally
 		{
-			try
+			if(resultat != null)
 			{
-				this.resultat.close();
-				try
-				{
-					this.ste.close();
-				}
-				catch (SQLException e)
-				{
-					ez = e;
-				}
+				this.closeReaders(ste, resultat);
 			}
-			catch (SQLException e)
-			{
-				ez = e;
-			}
-
 		}
 		if (ez != null)
 		{
@@ -370,42 +286,44 @@ public class DBUtil
 	{
 		SQLException ez = null;
 		List<ICompte> list = new ArrayList<ICompte>();
+		ResultSet resultat = null;
+		PreparedStatement ste = null;
 
 		try
 		{
 			String requete = "SELECT id,libelle,solde,decouvert,taux FROM banque.compte WHERE utilisateurId=?;";
-			this.ste.setInt(1, userId);
-			this.ste = this.connexion.prepareStatement(requete);
+			ste = this.connexion.prepareStatement(requete);
+			ste.setInt(1, userId);
 			// 4 - Recuperer le resulat
-			this.resultat = this.ste.executeQuery();
-			while (this.resultat.next())
+			resultat = ste.executeQuery();
+			while (resultat.next())
 			{
 				ICompte cmpt = null;
-				String libelle = this.resultat.getString("libelle");
-				Double solde = Double.valueOf(this.resultat.getDouble("solde"));
-				Double decouvert = Double.valueOf(this.resultat.getDouble("decouvert"));
-				if (this.resultat.wasNull())
+				String libelle = resultat.getString("libelle");
+				Double solde = Double.valueOf(resultat.getDouble("solde"));
+				Double decouvert = Double.valueOf(resultat.getDouble("decouvert"));
+				if (resultat.wasNull())
 				{
-					Float taux = Float.valueOf(this.resultat.getFloat("taux"));
-					if (this.resultat.wasNull())
+					Float taux = Float.valueOf(resultat.getFloat("taux"));
+					if (resultat.wasNull())
 					{
-						cmpt = new Compte(Long.valueOf(this.resultat.getLong("id")), libelle, solde);
+						cmpt = new Compte(Long.valueOf(resultat.getLong("id")), libelle, solde);
 					}
 					else
 					{
-						cmpt = new CompteRemunere(Long.valueOf(this.resultat.getLong("id")), libelle, solde, taux);
+						cmpt = new CompteRemunere(Long.valueOf(resultat.getLong("id")), libelle, solde, taux);
 					}
 				}
 				else
 				{
-					Float taux = Float.valueOf(this.resultat.getFloat("taux"));
-					if (this.resultat.wasNull())
+					Float taux = Float.valueOf(resultat.getFloat("taux"));
+					if (resultat.wasNull())
 					{
-						cmpt = new CompteASeuil(Long.valueOf(this.resultat.getLong("id")), libelle, solde, decouvert);
+						cmpt = new CompteASeuil(Long.valueOf(resultat.getLong("id")), libelle, solde, decouvert);
 					}
 					else
 					{
-						cmpt = new CompteASeuilRemunere(Long.valueOf(this.resultat.getLong("id")), libelle, solde, taux,
+						cmpt = new CompteASeuilRemunere(Long.valueOf(resultat.getLong("id")), libelle, solde, taux,
 								decouvert);
 					}
 				}
@@ -418,23 +336,7 @@ public class DBUtil
 		}
 		finally
 		{
-			try
-			{
-				this.resultat.close();
-				try
-				{
-					this.ste.close();
-				}
-				catch (SQLException e)
-				{
-					ez = e;
-				}
-			}
-			catch (SQLException e)
-			{
-				ez = e;
-			}
-
+			this.closeReaders(ste, resultat);
 		}
 		if (ez != null)
 		{
@@ -447,19 +349,22 @@ public class DBUtil
 	{
 		SQLException ez = null;
 		List<IOperation> list = new ArrayList<IOperation>();
+		ResultSet resultat = null;
+		PreparedStatement ste = null;
+
 		try
 		{
 			String requete = "SELECT id,libelle,montant,date FROM banque.operation;";
 
-			this.ste = this.connexion.prepareStatement(requete);
+			ste = this.connexion.prepareStatement(requete);
 			// 4 - Recuperer le resulat
-			this.resultat = this.ste.executeQuery();
+			resultat = ste.executeQuery();
 
-			while (this.resultat.next())
+			while (resultat.next())
 			{
-				IOperation opr = new Operation(Long.valueOf(this.resultat.getLong("id")),
-						this.resultat.getString("libelle"), Double.valueOf(this.resultat.getDouble("montant")),
-						this.resultat.getDate("date"));
+				IOperation opr = new Operation(Long.valueOf(resultat.getLong("id")),
+						resultat.getString("libelle"), Double.valueOf(resultat.getDouble("montant")),
+						resultat.getDate("date"));
 				list.add(opr);
 			}
 		}
@@ -469,23 +374,7 @@ public class DBUtil
 		}
 		finally
 		{
-			try
-			{
-				this.resultat.close();
-				try
-				{
-					this.ste.close();
-				}
-				catch (SQLException e)
-				{
-					ez = e;
-				}
-			}
-			catch (SQLException e)
-			{
-				ez = e;
-			}
-
+			this.closeReaders(ste, resultat);
 		}
 		if (ez != null)
 		{
@@ -494,45 +383,63 @@ public class DBUtil
 		return list;
 	}
 
-	public List<IOperation> rechercherOperation(int cpID, Date debut, Date fin, Boolean creditDebit) throws SQLException
+	public List<IOperation> rechercherOperation(int cpID, Date debut, Date fin, Boolean creditDebit) throws SQLException,BanqueException
 	{
 		SQLException ez = null;
 		List<IOperation> list = new ArrayList<IOperation>();
+		ResultSet resultat = null;
+		PreparedStatement ste = null;
+		String requete = "SELECT * FROM banque.operation WHERE compteId=? AND banque.operation.date AND  ? < banque.operation.date AND  banque.operation.date < ?";
+
+		// si la date de début est supérieur à la date de fin on leve une exception.
+		if ((debut != null) && (fin != null))
+		{
+			if(debut.after(fin))
+			{
+				throw new DateInvalid("Format de date invalide : Date début > date fin");
+			}
+		}
+		// si la date de fin est null alors la date de fin est aujourd'hui
+		if (fin == null)
+		{
+			fin = new Date(System.currentTimeMillis());
+		}
+		// Si creditDebit est null on ne filtre pas credit/debit
+		if (creditDebit == null)
+		{
+		}
+		else
+		{
+			// Si creditDebit est true on ne filtre pas credit
+			if (creditDebit.booleanValue())
+			{
+				requete += "AND montant>0";
+			}
+			// Si creditDebit est true on ne filtre pas debit
+			else if (!creditDebit.booleanValue())
+			{
+				requete += "AND montant<0";
+			}
+		}
+
+
 		try
 		{
+			//Preparation de la requete
+			ste = this.connexion.prepareStatement(requete);
+			ste.setInt(1, cpID);
+			ste.setDate(2, debut);
+			ste.setDate(3, fin);
+			// 4 - Recuperer le resultat
+			resultat = ste.executeQuery();
 
-			String requete = "SELECT * FROM banque.operation WHERE compteId=? AND banque.operation.date AND  ? < banque.operation.date AND  banque.operation.date < ?";
-			this.ste = this.connexion.prepareStatement(requete);
-			this.ste.setInt(1, cpID);
-			this.ste.setDate(2, debut);
-			if (fin == null)
+			while(resultat.next())
 			{
-				fin = new Date(System.currentTimeMillis());
-			}
-			this.ste.setDate(3, fin);
-			if (creditDebit == null)
-			{
-			}
-			else
-			{
-				if (creditDebit.booleanValue())
-				{
-					requete += "AND montant>0";
-				}
-				else if (!creditDebit.booleanValue())
-				{
-					requete += "AND montant<0";
-				}
-			}
-			// 4 - Recuperer le resulat
-			this.resultat = this.ste.executeQuery();
-
-			this.resultat.next();
-
-			IOperation opr = new Operation(Long.valueOf(this.resultat.getLong("id")),
-					this.resultat.getString("libelle"), Double.valueOf(this.resultat.getDouble("montant")),
-					this.resultat.getDate("date"));
+			IOperation opr = new Operation(Long.valueOf(resultat.getLong("id")),
+					resultat.getString("libelle"), Double.valueOf(resultat.getDouble("montant")),
+					resultat.getDate("date"));
 			list.add(opr);
+			}
 		}
 
 		catch (SQLException e)
@@ -541,23 +448,7 @@ public class DBUtil
 		}
 		finally
 		{
-			try
-			{
-				this.resultat.close();
-				try
-				{
-					this.ste.close();
-				}
-				catch (SQLException e)
-				{
-					ez = e;
-				}
-			}
-			catch (SQLException e)
-			{
-				ez = e;
-			}
-
+			this.closeReaders(ste, resultat);
 		}
 		if (ez != null)
 		{
@@ -566,13 +457,19 @@ public class DBUtil
 		return list;
 	}
 
-	public List<IOperation> faireVirement(int cpSrc, int cpDest, double somme) throws SQLException
+	public List<IOperation> faireVirement(int cpSrc, int cpDest, double somme) throws SQLException,BanqueException
 	{
+		if(cpSrc == cpDest)
+		{
+			throw new BanqueException("Impossible de faire un virement d'un compte vers lui même");
+		}
 		SQLException ez = null;
 		String updateRequete = "UPDATE banque.compte SET solde = solde + ? WHERE id=?";
 		String insertRequete = "INSERT INTO banque.operation (libelle,montant,date,compteID) VALUES (?,?,?,?)";
 		PreparedStatement updateCompte = null;
 		PreparedStatement insertOperation = null;
+		ResultSet resultat1 =null;
+		ResultSet resultat2 =null;
 		List<IOperation> list = null;
 		try
 		{
@@ -583,27 +480,43 @@ public class DBUtil
 
 			updateCompte.setDouble(1, somme);
 			updateCompte.setInt(2, cpSrc);
-			updateCompte.executeUpdate();
+			int rowCount = updateCompte.executeUpdate();
+			if (rowCount < 1)
+			{
+				throw new BanqueException("Tentative de transaction avec un compte inexistant !");
+			}
+			else if(rowCount > 1)
+			{
+				throw new BanqueException("Il existe plusieurs compte avec le même identifiants !");
+			}
 			insertOperation.setString(1, "Transaction avec le compte " + cpDest);
 			insertOperation.setDouble(2, somme);
 			insertOperation.setTimestamp(3, date);
 			insertOperation.setInt(4, cpSrc);
 			insertOperation.executeUpdate();
-			this.resultat = insertOperation.getGeneratedKeys();
-			this.resultat.next();
-			int cle1 = this.resultat.getInt("GENERATED_KEY");
+			resultat1 = insertOperation.getGeneratedKeys();
+			resultat1.next();
+			int cle1 = resultat1.getInt("GENERATED_KEY");
 
 			updateCompte.setDouble(1, -somme);
 			updateCompte.setInt(2, cpDest);
-			updateCompte.executeUpdate();
+			rowCount = updateCompte.executeUpdate();
+			if (rowCount < 1)
+			{
+				throw new BanqueException("Tentative de transaction avec un compte inexistant !");
+			}
+			else if(rowCount > 1)
+			{
+				throw new BanqueException("Il existe plusieurs compte avec le même identifiants !");
+			}
 			insertOperation.setString(1, "Transaction avec le compte " + cpSrc);
 			insertOperation.setDouble(2, -somme);
 			insertOperation.setTimestamp(3, date);
 			insertOperation.setInt(4, cpDest);
 			insertOperation.executeUpdate();
-			this.resultat = insertOperation.getGeneratedKeys();
-			this.resultat.next();
-			int cle2 = this.resultat.getInt("GENERATED_KEY");
+			resultat2 = insertOperation.getGeneratedKeys();
+			resultat2.next();
+			int cle2 = resultat2.getInt("GENERATED_KEY");
 
 			list = new ArrayList<IOperation>();
 			list.add(new Operation(Long.valueOf(cle1), "Transaction avec le compte " + cpDest, Double.valueOf(somme),
@@ -628,23 +541,7 @@ public class DBUtil
 		}
 		finally
 		{
-			try
-			{
-				this.resultat.close();
-				try
-				{
-					this.ste.close();
-				}
-				catch (SQLException e)
-				{
-					ez = e;
-				}
-			}
-			catch (SQLException e)
-			{
-				ez = e;
-			}
-
+			this.closeReaders(updateCompte , resultat1);
 		}
 		if (ez != null)
 		{
@@ -658,25 +555,27 @@ public class DBUtil
 
 		SQLException ez = null;
 		IClient clt = null;
+		ResultSet resultat = null;
+		PreparedStatement ste = null;
 		try
 		{
 			String requete = "SELECT id,nom,prenom,(Year(now()) - Year(dateDeNaissance)) as age "
 					+ ", sex,derniereConnection,adresse,codePostal,telephone FROM banque.utilisateur WHERE login=? AND password=?;";
-			this.ste = this.connexion.prepareStatement(requete);
-			this.ste.setString(1, login);
-			this.ste.setString(2, password);
+			ste = this.connexion.prepareStatement(requete);
+			ste.setString(1, login);
+			ste.setString(2, password);
 
 			// 4 - Recuperer le resulat
-			this.resultat = this.ste.executeQuery();
-			while (this.resultat.next())
+			resultat = ste.executeQuery();
+			while (resultat.next())
 			{
-				clt = new Client(Long.valueOf(this.resultat.getLong("id")), this.resultat.getString("nom"),
-						this.resultat.getString("prenom"), Integer.valueOf(this.resultat.getInt("age")));
-				clt.setSexe(this.resultat.getInt("sex"));
-				clt.setDerniereConnexion(this.resultat.getDate("derniereConnection"));
-				clt.setAdresse(this.resultat.getString("adresse"));
-				clt.setCodePostal(Integer.valueOf(this.resultat.getInt("codePostal")));
-				clt.setTelephone(this.resultat.getString("telephone"));
+				clt = new Client(Long.valueOf(resultat.getLong("id")), resultat.getString("nom"),
+						resultat.getString("prenom"), Integer.valueOf(resultat.getInt("age")));
+				clt.setSexe(resultat.getInt("sex"));
+				clt.setDerniereConnexion(resultat.getDate("derniereConnection"));
+				clt.setAdresse(resultat.getString("adresse"));
+				clt.setCodePostal(Integer.valueOf(resultat.getInt("codePostal")));
+				clt.setTelephone(resultat.getString("telephone"));
 			}
 		}
 		catch (SQLException e)
@@ -685,28 +584,96 @@ public class DBUtil
 		}
 		finally
 		{
-			try
-			{
-				this.resultat.close();
-				try
-				{
-					this.ste.close();
-				}
-				catch (SQLException e)
-				{
-					ez = e;
-				}
-			}
-			catch (SQLException e)
-			{
-				ez = e;
-			}
-
+			this.closeReaders( ste , resultat);
 		}
 		if (ez != null)
 		{
 			throw ez;
 		}
 		return clt;
+	}
+	public int getNbClient() throws SQLException
+	{
+		SQLException ez=null ;
+		String selectCount = "SELECT Count(1) as nb FROM banque.utilisateur;";
+		ResultSet resultat = null;
+		Statement ste = null;
+		int resu = -1;
+		try
+		{
+			ste = this.connexion.createStatement();
+			resultat = ste.executeQuery(selectCount);
+			resultat.next();
+			resu = resultat.getInt("nb");
+		}
+		catch(SQLException e )
+		{
+			ez = e;
+		}
+		finally
+		{
+			this.closeReaders(ste, resultat);
+		}
+		if(ez != null)
+		{
+			throw ez;
+		}
+		return resu;
+	}
+	public int getNbCompte() throws SQLException
+	{
+		String selectCount = "SELECT Count(1) as nb FROM banque.compte;";
+		SQLException ez=null ;
+		ResultSet resultat = null;
+		Statement ste = null;
+		int resu = -1;
+		try
+		{
+			ste = this.connexion.createStatement();
+			resultat = ste.executeQuery(selectCount);
+			resultat.next();
+			resu = resultat.getInt("nb");
+		}
+		catch(SQLException e )
+		{
+			ez = e;
+		}
+		finally
+		{
+			this.closeReaders(ste, resultat);
+		}
+		if(ez != null)
+		{
+			throw ez;
+		}
+		return resu;
+	}
+	public int getNbOperation() throws SQLException
+	{
+		String selectCount = "SELECT Count(1) as nb FROM banque.operation;";
+		SQLException ez=null ;
+		ResultSet resultat = null;
+		Statement ste = null;
+		int resu = -1;
+		try
+		{
+			ste = this.connexion.createStatement();
+			resultat = ste.executeQuery(selectCount);
+			resultat.next();
+			resu = resultat.getInt("nb");
+		}
+		catch(SQLException e )
+		{
+			ez = e;
+		}
+		finally
+		{
+			this.closeReaders(ste, resultat);
+		}
+		if(ez != null)
+		{
+			throw ez;
+		}
+		return resu;
 	}
 }

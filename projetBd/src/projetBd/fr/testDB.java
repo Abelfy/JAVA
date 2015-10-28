@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.List;
 
+import projetBank.fr.banque.BanqueException;
 import projetBank.fr.banque.entities.IClient;
 import projetBank.fr.banque.entities.ICompte;
 import projetBank.fr.banque.entities.IOperation;
@@ -14,9 +15,8 @@ public class testDB
 
 	public static void main(String[] args)
 	{
-		DBUtil util = new DBUtil();
-		try
-		{
+		DBUtil util = new DBUtil("jdbc:mysql://localhost:3306/banque","root","A130890b!!");
+
 			util.connexion();
 
 			//authentification
@@ -110,6 +110,11 @@ public class testDB
 				e.printStackTrace();
 				System.err.println("Erreur à la recherche des operations du compte");
 			}
+			catch (BanqueException e)
+			{
+				e.printStackTrace();
+				System.err.println("Erreur à la recherche des operations du compte");
+			}
 
 			// Virements
 			try
@@ -125,28 +130,13 @@ public class testDB
 				e.printStackTrace();
 				System.err.println("echec lors de l'opératiob");
 			}
-
-		}
-		catch (ClassNotFoundException e)
-		{
-			System.err.println("Impossible de charger le driver");
-		}
-		catch (SQLException e)
-		{
-			System.err.println("Impossible d'établir la connexion");
-		}
-		finally
-		{
-			try
-			{
-				util.close();
-			}
-			catch (SQLException e)
+			catch(BanqueException e)
 			{
 				e.printStackTrace();
-				System.err.println("Impossible de fermer la connexion");
+				System.err.println("Erreur sur les n° de comptes");
 			}
-		}
+
+				util.close();
 
 	}
 
