@@ -318,9 +318,6 @@ public class DbUtilTest
 			Assert.fail(e.getMessage());
 			e.printStackTrace();
 		}
-		catch (BanqueException e)
-		{
-		}
 		Assert.assertNotNull("La liste retournée est null", list);
 	}
 

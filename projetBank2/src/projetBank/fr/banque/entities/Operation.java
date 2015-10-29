@@ -1,5 +1,6 @@
 package projetBank.fr.banque.entities;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class Operation implements IOperation
@@ -8,7 +9,7 @@ public class Operation implements IOperation
 	private Long numero;
 	private String libelle;
 	private Double montant;
-	private Date dateOperation;
+	private Timestamp dateOperation;
 
 	/**
 	 *
@@ -28,7 +29,7 @@ public class Operation implements IOperation
 		this.numero = numero;
 		this.libelle = libelle;
 		this.montant = montant;
-		this.dateOperation = dateOperation;
+		this.dateOperation = new Timestamp(dateOperation.getTime());
 	}
 
 	@Override
@@ -76,7 +77,7 @@ public class Operation implements IOperation
 	@Override
 	public void setDateOperation(Date dateOperation)
 	{
-		this.dateOperation = dateOperation;
+		this.dateOperation.setTime(dateOperation.getTime());
 	}
 
 	@Override

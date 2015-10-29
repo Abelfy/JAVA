@@ -1,23 +1,70 @@
 package projetBd.fr;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 import projetBank.fr.banque.BanqueException;
 import projetBank.fr.banque.entities.IClient;
 import projetBank.fr.banque.entities.ICompte;
 import projetBank.fr.banque.entities.IOperation;
 
-public class testDB
+public class Run
 {
 
 	public static void main(String[] args)
 	{
-		DBUtil util = new DBUtil("jdbc:mysql://localhost:3306/banque","root","A130890b!!");
 
-			util.connexion();
+		Properties mesProperties = new Properties();
+
+		try(InputStream is = ClassLoader.getSystemResourceAsStream("projetBd/fr/mesPreferences.properties"))
+		{
+			mesProperties.load(is);
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+//		File file = new File("C:/Users/abelfy/Documents/Exercice/JAVA/projetBd/src/projetBd/fr/mesPreferences.properties");
+//		if(file.exists() && file.canRead())
+//		{
+//			try(FileReader fr = new FileReader(file)){
+//
+//				mesProperties.load(fr);
+//				}
+//			catch(IOException e)
+//			{
+//				e.printStackTrace();
+//			}
+//		}
+//		else
+//		{
+//			System.err.println("Fichier'" + file + "'pas trouve");
+//		}
+
+
+
+	DBUtil util = new DBUtil(mesProperties.getProperty("db.url"),
+								mesProperties.getProperty("db.login"),
+								mesProperties.getProperty("db.password"));
+
+
+	Properties pS = System.getProperties();
+	Iterator<Map.Entry<Object,Object>> iter = pS.entrySet().iterator();
+	while(iter.hasNext())
+	{
+		Map.Entry<Object, Object> entry = iter.next();
+		System.out.println(entry.getKey() + " = " +entry.getValue());
+	}
+
+
+	util.connexion();
 
 			//authentification
 			try
@@ -123,11 +170,11 @@ public class testDB
 				if(listoperation != null)
 				{
 					System.out.println(listoperation.toString());
-				}
+			}
 			}
 			catch (SQLException e)
 			{
-				e.printStackTrace();
+			e.printStackTrace();
 				System.err.println("echec lors de l'opératiob");
 			}
 			catch(BanqueException e)

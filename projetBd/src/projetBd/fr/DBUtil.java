@@ -51,7 +51,6 @@ public class DBUtil
 		}
 		catch (PropertyVetoException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -64,7 +63,6 @@ public class DBUtil
 		}
 		catch (SQLException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -391,6 +389,7 @@ public class DBUtil
 		PreparedStatement ste = null;
 		String requete = "SELECT * FROM banque.operation WHERE compteId=? AND banque.operation.date AND  ? < banque.operation.date AND  banque.operation.date < ?";
 
+
 		// si la date de début est supérieur à la date de fin on leve une exception.
 		if ((debut != null) && (fin != null))
 		{
@@ -398,6 +397,11 @@ public class DBUtil
 			{
 				throw new DateInvalid("Format de date invalide : Date début > date fin");
 			}
+		}
+		// si la date de debut est null on leve une exception DateInvalid
+		if (debut == null)
+		{
+			throw new DateInvalid("La date de début ne peut pas être null");
 		}
 		// si la date de fin est null alors la date de fin est aujourd'hui
 		if (fin == null)
